@@ -1,0 +1,72 @@
+# NestJS WebDAV
+
+<a href="https://www.npmjs.com/package/nestjs-webdav"><img src="https://img.shields.io/npm/v/nestjs-webdav.svg" alt="NPM Version" /></a>
+<a href="https://www.npmjs.com/package/nestjs-webdav"><img src="https://img.shields.io/npm/l/nestjs-webdav.svg" alt="Package License" /></a>
+
+## Table of Contents
+
+- [Description](#description)
+- [Installation](#installation)
+- [Examples](#examples)
+- [License](#license)
+
+## Description
+Integrates WebDAV with Nest
+
+## Installation
+
+```bash
+npm install nestjs-webdav webdav
+```
+
+## Examples
+
+```bash
+docker run \
+-e SQLITE_DATABASE=nextcloud \
+-e NEXTCLOUD_ADMIN_USER=admin \
+-e NEXTCLOUD_ADMIN_PASSWORD=password \
+-p 8080:80 \
+nextcloud
+```
+
+```ts
+import { Module } from '@nestjs/common';
+import { WebDAVModule } from 'nestjs-webdav';
+import { AppController } from './app.controller';
+
+@Module({
+  imports: [
+    WebDAVModule.forRoot({
+      config: {
+        endpoint: 'http://localhost:8080/remote.php/dav/files/admin/',
+        username: 'admin',
+        password: 'password',
+      }
+    }),
+  ],
+  controllers: [AppController],
+})
+export class AppModule {}
+```
+
+```ts
+import { Controller, Get, } from '@nestjs/common';
+import { InjectWebDAV, WebDAV } from 'nestjs-webdav';
+
+@Controller()
+export class AppController {
+  constructor(
+    @InjectWebDAV() private readonly webDAV: WebDAV,
+  ) {}
+
+  @Get()
+  async getHello() {
+    return await this.webDAV.getDirectoryContents('/');
+  }
+}
+```
+
+## License
+
+MIT
