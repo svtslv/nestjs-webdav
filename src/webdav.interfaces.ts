@@ -32,7 +32,7 @@ export type WebDAV = {
   moveFile(from: string, to: string): Promise<any>;
   putFileContents(path: string, content: any, options?: {
     overwrite?: boolean,
-    onUploadProgress: (progress) => any
+    onUploadProgress?: (progress) => any
   }): Promise<any>;
   stat(path: string): Promise<any>;
   createReadStream(path: string): any;
