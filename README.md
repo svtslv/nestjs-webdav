@@ -21,6 +21,13 @@ npm install nestjs-webdav webdav
 
 ## Examples
 
+### WebDAV-CLI
+```bash
+npx webdav-cli --username=username --password=password
+```
+
+### NextCloud
+
 ```bash
 docker run \
 -e SQLITE_DATABASE=nextcloud \
@@ -29,6 +36,8 @@ docker run \
 -p 8080:80 \
 nextcloud
 ```
+
+### NestJS
 
 ```ts
 import { Module } from '@nestjs/common';
@@ -39,11 +48,18 @@ import { AppController } from './app.controller';
   imports: [
     WebDAVModule.forRoot({
       config: {
+        endpoint: 'http://127.0.0.1:1900',
+        username: 'username',
+        password: 'password',
+      }
+    }),
+    WebDAVModule.forRoot({
+      config: {
         endpoint: 'http://localhost:8080/remote.php/dav/files/admin/',
         username: 'admin',
         password: 'password',
       }
-    }),
+    }, 'nextCloud'),
   ],
   controllers: [AppController],
 })
@@ -58,11 +74,15 @@ import { InjectWebDAV, WebDAV } from 'nestjs-webdav';
 export class AppController {
   constructor(
     @InjectWebDAV() private readonly webDAV: WebDAV,
+    @InjectWebDAV('nextCloud') private readonly nextCloud: WebDAV,
   ) {}
 
   @Get()
   async getHello() {
-    return await this.webDAV.getDirectoryContents('/');
+    return {
+      webdavCli: await this.webDAV.getDirectoryContents('/'),
+      nextCloud: await this.nextCloud.getDirectoryContents('/'),
+    }
   }
 }
 ```
