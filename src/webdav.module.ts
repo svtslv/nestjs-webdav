@@ -1,38 +1,22 @@
-import { Module, DynamicModule, Provider } from "@nestjs/common";
-import { WebDAVModuleOptions, WebDAVModuleAsyncOptions } from './webdav.interfaces';
-import { createWebDAVConnection, getWebDAVConnectionToken, getWebDAVOptionsToken } from './webdav.utils'
+import { DynamicModule, Module } from '@nestjs/common';
+import { WebDAVCoreModule } from './webdav.core-module';
+import { WebDAVModuleAsyncOptions, WebDAVModuleOptions } from './webdav.interfaces';
 
 @Module({})
 export class WebDAVModule {
-  static forRoot(options: WebDAVModuleOptions, connection?: string): DynamicModule {
-
-    const webDAVModuleOptions: Provider = {
-      provide: getWebDAVOptionsToken(connection),
-      useValue: options,
-    };
-
-    const webDAVConnectionProvider: Provider = {
-      provide: getWebDAVConnectionToken(connection),
-      useFactory: async () => await createWebDAVConnection(options)
-    };
-
+  public static forRoot(options: WebDAVModuleOptions, connection?: string): DynamicModule {
     return {
       module: WebDAVModule,
-      providers: [
-        webDAVModuleOptions,
-        webDAVConnectionProvider,
-      ],
-      exports: [
-        webDAVModuleOptions,
-        webDAVConnectionProvider,
-      ],
+      imports: [WebDAVCoreModule.forRoot(options, connection)],
+      exports: [WebDAVCoreModule],
     };
   }
 
-  static forRootAsync(options: WebDAVModuleAsyncOptions, connection?: string): DynamicModule {
+  public static forRootAsync(options: WebDAVModuleAsyncOptions, connection?: string): DynamicModule {
     return {
       module: WebDAVModule,
-      imports: [WebDAVModule.forRootAsync(options, connection)],
+      imports: [WebDAVCoreModule.forRootAsync(options, connection)],
+      exports: [WebDAVCoreModule],
     };
   }
 }

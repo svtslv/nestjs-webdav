@@ -9,7 +9,7 @@ export interface WebDAVModuleOptions {
 }
 
 export interface WebDAVModuleOptionsFactory {
-  createGeoIP2ModuleOptions(): Promise<WebDAVModuleOptions> | WebDAVModuleOptions;
+  createWebDAVModuleOptions(): Promise<WebDAVModuleOptions> | WebDAVModuleOptions;
 }
 
 export interface WebDAVModuleAsyncOptions extends Pick<ModuleMetadata, 'imports'> {

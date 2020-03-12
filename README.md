@@ -37,7 +37,7 @@ docker run \
 nextcloud
 ```
 
-### NestJS
+### WebDAVModule.forRoot(options, connection?)
 
 ```ts
 import { Module } from '@nestjs/common';
@@ -51,20 +51,55 @@ import { AppController } from './app.controller';
         endpoint: 'http://127.0.0.1:1900',
         username: 'username',
         password: 'password',
-      }
+      },
     }),
     WebDAVModule.forRoot({
       config: {
         endpoint: 'http://localhost:8080/remote.php/dav/files/admin/',
         username: 'admin',
         password: 'password',
-      }
+      },
     }, 'nextCloud'),
   ],
   controllers: [AppController],
 })
 export class AppModule {}
 ```
+
+### WebDAVModule.forRootAsync(options, connection?)
+
+```ts
+import { Module } from '@nestjs/common';
+import { WebDAVModule } from 'nestjs-webdav';
+import { AppController } from './app.controller';
+
+@Module({
+  imports: [
+    WebDAVModule.forRootAsync({
+      useFactory: () => ({
+        config: {
+          endpoint: 'http://127.0.0.1:1900',
+          username: 'username',
+          password: 'password',
+        },
+      }),
+    }),
+    WebDAVModule.forRootAsync({
+      useFactory: () => ({
+        config: {
+          endpoint: 'http://localhost:8080/remote.php/dav/files/admin/',
+          username: 'admin',
+          password: 'password',
+        },
+      }),
+    }, 'nextCloud'),
+  ],
+  controllers: [AppController],
+})
+export class AppModule {}
+```
+
+### InjectWebDAV(connection?)
 
 ```ts
 import { Controller, Get, } from '@nestjs/common';
