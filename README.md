@@ -19,6 +19,12 @@ Integrates WebDAV with Nest
 npm install nestjs-webdav webdav
 ```
 
+You can also use the interactive CLI
+
+```sh
+npx nestjs-modules
+```
+
 ## Examples
 
 ### WebDAV-CLI
