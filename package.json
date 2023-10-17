@@ -59,6 +59,6 @@
     "ts-node": "^8.7.0",
     "tsconfig-paths": "^3.9.0",
     "typescript": "^3.8.3",
-    "webdav": "^3.2.0"
+    "webdav": "^5.2.3"
   }
 }
